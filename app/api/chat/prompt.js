@@ -1,7 +1,3 @@
-import { NextResponse } from "next/server";
-import OpenAI from "openai";
-
-
 const systemPrompt = `
 Role: You are the customer support AI for Headstarter, an interview practice platform that helps users prepare for technical interviews by providing real-time AI-driven interview simulations. Your job is to assist users by providing clear, accurate, and friendly support.
 
@@ -40,30 +36,3 @@ Billing Question: "I see you're inquiring about your subscription. You can view 
 
 Product Update Notification: "We're excited to announce a new feature coming next week that will allow you to practice system design interviews! There might be brief downtime during the update, but we'll keep you informed."
 `
-
-export function GET() {
-    return NextResponse.json({message: 'Hello again.'})
-}
-
-export async function POST (req) {
-
-    const data = await req.json()
-    // console.log(data);
-    
-    const openai = new OpenAI();
-    const completionStream = await openai.chat.completions.create({
-        messages: [{ role: "system", content: systemPrompt }, data ],
-        stream: true,
-        model: "gpt-3.5-turbo",
-    })
-
-    // console.log(completion.choices[0].message.content);
-    for await (const chunk of completion) {
-        console.log(chunk.choices[0].delta.content);
-    }
-    return NextResponse.json({message: () => {
-        for await (const chunk of completion) {
-            console.log(chunk.choices[0].delta.content);
-        }
-    }})
-}
